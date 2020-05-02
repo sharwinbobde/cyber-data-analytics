@@ -1,8 +1,6 @@
-import numpy as np
 import pandas as pd
 import re
 from sklearn.preprocessing import LabelEncoder
-import time
 
 
 def relabel(df):
@@ -131,15 +129,10 @@ def preprocess(df):
     df["day_of_week"] = df["creationdate"].dt.dayofweek
     df["hour"] = df["creationdate"].dt.hour
 
-    t = time.time()
-    input(t)
-    # input(df["creationdate"])
-    # df.apply(agg_features, axis=1)
-    df.groupby("card_id").apply(agg_features)
-    print((time.time() - t) / 60.0)
+    return df
 
 
 if __name__ == "__main__":
     data = "./data/data_for_student_case.csv"
-    df = pd.read_csv(data, nrows=20000)
+    df = pd.read_csv(data)
     preprocess(df)
