@@ -129,6 +129,7 @@ def preprocess(df):
     df["day_of_week"] = df["creationdate"].dt.dayofweek
     df["hour"] = df["creationdate"].dt.hour
 
+
     return df
 
 
