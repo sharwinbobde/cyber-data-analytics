@@ -115,8 +115,8 @@ class SMOTE:
         y_resampled = np.concatenate((self.y, smoted_labels), axis=0)
 
         if shuffle is True:
-            X_resampled = np.random.shuffle(X_resampled)
-            y_resampled = np.random.shuffle(y_resampled)
+            np.random.shuffle(X_resampled)
+            np.random.shuffle(y_resampled)
 
         return X_resampled, y_resampled
 

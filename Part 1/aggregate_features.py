@@ -69,16 +69,16 @@ def aggregate_features(df):
                 ].mean()
             row["prev_total_transactions"] = df.loc[same_card_id].shape[0]
         else:
-            row["prev_month_avg_amount"] = 0.0
-            row["prev_week_avg_amount"] = 0.0
-            row["prev_day_amount"] = 0.0
-            row["daily_avg_over_month"] = 0.0
-            row["prev_day_same_country"] = 0.0
-            row["prev_month_same_country"] = 0.0
-            row["prev_month_avg_amount_same_country"] = 0.0
-            row["prev_month_same_currency"] = 0.0
-            row["prev_month_avg_amount_same_currency"] = 0.0
-            row["prev_total_transactions"] = 0.0
+            row["prev_month_avg_amount"] = row["amount_eur"]
+            row["prev_week_avg_amount"] = row["amount_eur"]
+            row["prev_day_amount"] = row["amount_eur"]
+            row["daily_avg_over_month"] = row["amount_eur"]
+            row["prev_day_same_country"] = 1.0
+            row["prev_month_same_country"] = 1.0
+            row["prev_month_avg_amount_same_country"] = row["amount_eur"]
+            row["prev_month_same_currency"] = 1.0
+            row["prev_month_avg_amount_same_currency"] = row["amount_eur"]
+            row["prev_total_transactions"] = 1.0
         return row
 
     df = df.apply(agg_fn, axis=1)
