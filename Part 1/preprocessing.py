@@ -84,11 +84,11 @@ def preprocess(df):
     df = replace_na_with(df, "issuercountrycode", "ZZ")
     df = replace_na_with(df, "shoppercountrycode", "ZZ")
 
-    df = encode(df, "card_id")
-    df = encode(df, "ip_id")
-    df = encode(df, "txvariantcode")
-    df = encode(df, "shopperinteraction")
-    df = encode(df, "cardverificationcodesupplied")
+    df, _ = encode(df, "card_id")
+    df, _ = encode(df, "ip_id")
+    df, _ = encode(df, "txvariantcode")
+    df, _ = encode(df, "shopperinteraction")
+    df, _ = encode(df, "cardverificationcodesupplied")
 
     df["creationdate"] = pd.to_datetime(df["creationdate"])
     df["date"] = df["creationdate"].dt.date
@@ -96,11 +96,11 @@ def preprocess(df):
     unique_issuer_cc = df["issuercountrycode"].unique().tolist()
     unique_shopper_cc = df["shoppercountrycode"].unique().tolist()
     unique_codes = list(set(unique_issuer_cc + unique_shopper_cc))
-    df = encode(df, "issuercountrycode", values=unique_codes)
-    df = encode(df, "shoppercountrycode", values=unique_codes)
+    df, _ = encode(df, "issuercountrycode", values=unique_codes)
+    df, _ = encode(df, "shoppercountrycode", values=unique_codes)
 
     df["amount_eur"] = df.apply(lambda x: conv_to_eur(x), axis=1)
-    df = encode(df, "currencycode")
+    df, _ = encode(df, "currencycode")
 
     df["accountcode"] = df["accountcode"].apply(lambda x: re.sub("Account", "", x))
     df["accountcode_cc"] = 0
@@ -108,10 +108,10 @@ def preprocess(df):
     df.loc[(df["accountcode"] == "Mexico"), "accountcode_cc"] = "MX"
     df.loc[(df["accountcode"] == "Sweden"), "accountcode_cc"] = "SE"
     df.loc[(df["accountcode"] == "APAC"), "accountcode_cc"] = "APAC"
-    df = encode(df, "accountcode_cc")
+    df, _ = encode(df, "accountcode_cc")
 
     df.loc[df["mail_id"].str.contains("na", case=False), "mail_id"] = "email99999"
-    df = encode(df, "mail_id")
+    df, _ = encode(df, "mail_id")
 
     df["bookingdate"] = pd.to_datetime(df["bookingdate"])
 
