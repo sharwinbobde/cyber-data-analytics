@@ -75,3 +75,59 @@ def conv_to_eur(row):
         "SEK": 10.635,
     }
     return row["amount"] / (currency_dict[row["currencycode"]] * 100)
+
+    
+def preprocess(df):
+    df = relabel(df)
+
+    df = replace_na_with(df, "cardverificationcodesupplied", False)
+    df = replace_na_with(df, "issuercountrycode", "ZZ")
+    df = replace_na_with(df, "shoppercountrycode", "ZZ")
+
+    df = encode(df, "card_id")
+    df = encode(df, "ip_id")
+    df = encode(df, "txvariantcode")
+    df = encode(df, "shopperinteraction")
+    df = encode(df, "cardverificationcodesupplied")
+
+    df["creationdate"] = pd.to_datetime(df["creationdate"])
+    df["date"] = df["creationdate"].dt.date
+
+    unique_issuer_cc = df["issuercountrycode"].unique().tolist()
+    unique_shopper_cc = df["shoppercountrycode"].unique().tolist()
+    unique_codes = list(set(unique_issuer_cc + unique_shopper_cc))
+    df = encode(df, "issuercountrycode", values=unique_codes)
+    df = encode(df, "shoppercountrycode", values=unique_codes)
+
+    df["amount_eur"] = df.apply(lambda x: conv_to_eur(x), axis=1)
+    df = encode(df, "currencycode")
+
+    df["accountcode"] = df["accountcode"].apply(lambda x: re.sub("Account", "", x))
+    df["accountcode_cc"] = 0
+    df.loc[(df["accountcode"] == "UK"), "accountcode_cc"] = "GB"
+    df.loc[(df["accountcode"] == "Mexico"), "accountcode_cc"] = "MX"
+    df.loc[(df["accountcode"] == "Sweden"), "accountcode_cc"] = "SE"
+    df.loc[(df["accountcode"] == "APAC"), "accountcode_cc"] = "APAC"
+    df = encode(df, "accountcode_cc")
+
+    df.loc[df["mail_id"].str.contains("na", case=False), "mail_id"] = "email99999"
+    df = encode(df, "mail_id")
+
+    df["bookingdate"] = pd.to_datetime(df["bookingdate"])
+
+    df.loc[df["cvcresponsecode"] > 2, "cvcresponsecode"] = 3
+    df["countries_equal"] = df["shoppercountrycode"] == df["issuercountrycode"]
+    df.loc[df["countries_equal"] == False, "countries_equal"] = 0
+    df.loc[df["countries_equal"] == True, "countries_equal"] = 1
+
+    df["day_of_week"] = df["creationdate"].dt.dayofweek
+    df["hour"] = df["creationdate"].dt.hour
+
+
+    return df
+
+
+if __name__ == "__main__":
+    data = "./data/data_for_student_case.csv"
+    df = pd.read_csv(data)
+    preprocess(df)
