@@ -1,37 +1,41 @@
-from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-import sklearn
-
 from metrics import run_metrics
 
-class models:
 
+class models:
     @staticmethod
-    def DecisionTree(X_train, X_test, Y_train, Y_test):
-        print("Building Decision Tree")
-        model = DecisionTreeClassifier()
+    def DecisionTree(X_train, X_test, Y_train, Y_test, quiet=True):
+        if not quiet:
+            print("Building Decision Tree")
+        model = DecisionTreeClassifier(random_state=1337)
         model.fit(X_train, Y_train)
         y_pred = model.predict(X_test)
+        y_proba = model.predict_proba(X_test)
 
-        result = run_metrics(Y_test, y_pred)
-        print("Done")
-        return result
+        result = run_metrics(Y_test, y_pred, y_proba)
+        if not quiet:
+            print("Done")
+        return model, result
 
     @staticmethod
-    def NaiveBayes(X_train, X_test, Y_train, Y_test):
+    def NaiveBayes(X_train, X_test, Y_train, Y_test, quiet=True):
         from sklearn.naive_bayes import GaussianNB
-        print("Building Gaussian Naive Bayes model")
+
+        if not quiet:
+            print("Building Gaussian Naive Bayes model")
         model = GaussianNB()
         model.fit(X_train, Y_train)
         y_pred = model.predict(X_test)
+        y_proba = model.predict_proba(X_test)
 
-        result = run_metrics(Y_test, y_pred)
-        print("Done")
+        result = run_metrics(Y_test, y_pred, y_proba)
+        if not quiet:
+            print("Done")
         return result
 
     @staticmethod
     def try_all(X_train, X_test, Y_train, Y_test):
         results = {}
-        results['NaiveBayes'] = models.NaiveBayes(X_train, X_test, Y_train, Y_test)
-        results['DecisionTree'] = models.NaiveBayes(X_train, X_test, Y_train, Y_test)
+        results["NaiveBayes"] = models.NaiveBayes(X_train, X_test, Y_train, Y_test)
+        results["DecisionTree"] = models.NaiveBayes(X_train, X_test, Y_train, Y_test)
         return results

@@ -4,7 +4,9 @@ import math
 
 
 class SMOTE:
-    def __init__(self, p: float, k: int, random_state: int = 1337) -> None:
+    def __init__(
+        self, p: float, k: int, cat_cols: list, random_state: int = 1337
+    ) -> None:
         self.p = p
         self.k = k
         self.nn = None
@@ -12,6 +14,7 @@ class SMOTE:
         self.X_maj = None
         self.y = None
         self.minority_label = None
+        self.cat_cols = cat_cols
 
         np.random.seed(random_state)
 
@@ -35,7 +38,7 @@ class SMOTE:
         # every other sample in the population
         sample_duplicates = np.tile(sample, (population.shape[0], 1))
         distances = self.euclidean_distance(population, sample_duplicates)
-        return np.argsort(distances)[-k:]
+        return np.argsort(distances)
 
     def get_minority_label(self, labels: np.array) -> (int, np.array):
         """
@@ -54,8 +57,8 @@ class SMOTE:
         """
         """
         nn_index = np.random.randint(0, high=self.k)
-        population_index = self.nn[index, nn_index]
-        nn_sample = self.X_min[population_index]
+        nearest_neighbours = self.X_min[self.nn[index]][: self.k]
+        nn_sample = nearest_neighbours[nn_index]
         weight = np.random.uniform(low=0, high=1)
         synthetic_sample = sample + (sample - nn_sample) * weight
         return synthetic_sample
@@ -114,6 +117,8 @@ class SMOTE:
         X_resampled = np.concatenate((self.X_maj, self.X_min, smoted_samples), axis=0)
         y_resampled = np.concatenate((self.y, smoted_labels), axis=0)
 
+        X_resampled[:, self.cat_cols] = np.floor(X_resampled[:, self.cat_cols])
+
         if shuffle is True:
             np.random.shuffle(X_resampled)
             np.random.shuffle(y_resampled)
@@ -154,6 +159,6 @@ if __name__ == "__main__":
     ]
     X = df[columns].to_numpy()
     y = df["simple_journal"].to_numpy()
-    smote = SMOTE(0.01, 6)
+    smote = SMOTE(0.2, 6)
     smote.fit(X, y)
     X_resampled, y_resampled = smote.transform()
