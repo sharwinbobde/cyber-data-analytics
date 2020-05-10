@@ -13,9 +13,10 @@ class models:
         y_proba = model.predict_proba(X_test)
 
         result = run_metrics(Y_test, y_pred, y_proba)
+        result['model'] = model
         if not quiet:
             print("Done")
-        return model, result
+        return result
 
     @staticmethod
     def NaiveBayes(X_train, X_test, Y_train, Y_test, quiet=True):
@@ -29,6 +30,7 @@ class models:
         y_proba = model.predict_proba(X_test)
 
         result = run_metrics(Y_test, y_pred, y_proba)
+        result['model'] = model
         if not quiet:
             print("Done")
         return result
