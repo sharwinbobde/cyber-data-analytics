@@ -4,9 +4,7 @@ import math
 
 
 class SMOTE:
-    def __init__(
-        self, p: float, k: int, cat_cols: list, random_state: int = 1337
-    ) -> None:
+    def __init__(self, p: float, k: int, random_state: int = 1337) -> None:
         self.p = p
         self.k = k
         self.nn = None
@@ -14,7 +12,6 @@ class SMOTE:
         self.X_maj = None
         self.y = None
         self.minority_label = None
-        self.cat_cols = cat_cols
 
         np.random.seed(random_state)
 
@@ -26,7 +23,7 @@ class SMOTE:
         return np.sqrt(np.sum(np.square(v1 - v2), axis=1))
 
     def get_nearest_neighbours(
-        self, sample: np.array, population: np.array, k: int
+        self, sample: np.array, population: np.array
     ) -> np.array:
         """
         Computes `k` nearest-neighbours of `sample`
@@ -53,11 +50,11 @@ class SMOTE:
         minority_label_map = labels == minority_label
         return minority_label, minority_label_map
 
-    def get_synthetic_sample(self, sample: np.array, index: int) -> np.array:
+    def get_synthetic_sample(self, sample: np.array, neighbours: np.array) -> np.array:
         """
         """
         nn_index = np.random.randint(0, high=self.k)
-        nearest_neighbours = self.X_min[self.nn[index]][: self.k]
+        nearest_neighbours = self.X_min[neighbours][1 : self.k + 1]
         nn_sample = nearest_neighbours[nn_index]
         weight = np.random.uniform(low=0, high=1)
         synthetic_sample = sample + (sample - nn_sample) * weight
@@ -74,9 +71,7 @@ class SMOTE:
             raise ValueError(
                 f"""minority class in X already has a percentage of {round(100*X_min.shape[0]/X.shape[0], 2)} which is >= desired percentage self.p = {self.p}. This class is used to do oversampling of minority class, not undersampling"""
             )
-        self.nn = np.apply_along_axis(
-            self.get_nearest_neighbours, 1, X_min, X_min, self.k
-        )
+        self.nn = np.apply_along_axis(self.get_nearest_neighbours, 1, X_min, X_min)
         self.minority_label = minority_label
         self.y = y
         self.X_min = X_min
@@ -103,8 +98,10 @@ class SMOTE:
         for resample_index in resample_indices:
             # get SMOTE sample by passing the minority sample
             # and the index of sample in minority list
+            sample_neighbours = self.nn[resample_index]
+            random_sample = self.X_min[resample_index]
             smoted_samples.append(
-                self.get_synthetic_sample(self.X_min[resample_index], resample_index)
+                self.get_synthetic_sample(random_sample, sample_neighbours)
             )
         # create a numpy array from resampled minority examples
         # and corresponding labels
@@ -116,8 +113,6 @@ class SMOTE:
         # create full sample and labels combining majority, minority and smoted samples
         X_resampled = np.concatenate((self.X_maj, self.X_min, smoted_samples), axis=0)
         y_resampled = np.concatenate((self.y, smoted_labels), axis=0)
-
-        X_resampled[:, self.cat_cols] = np.floor(X_resampled[:, self.cat_cols])
 
         if shuffle is True:
             np.random.shuffle(X_resampled)
