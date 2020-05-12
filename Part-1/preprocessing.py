@@ -76,8 +76,11 @@ def conv_to_eur(row):
     }
     return row["amount"] / (currency_dict[row["currencycode"]] * 100)
 
-    
+
 def preprocess(df, undersample=False):
+    """
+    combine all above preprocessing methods into one
+    """
     df = relabel(df)
 
     df = replace_na_with(df, "cardverificationcodesupplied", False)
@@ -122,14 +125,13 @@ def preprocess(df, undersample=False):
 
     df["day_of_week"] = df["creationdate"].dt.dayofweek
     df["hour"] = df["creationdate"].dt.hour
-    
+
     if undersample:
-        df = pd.concat((df[df["simple_journal"] == 0].sample(frac=0.1, random_state=1337), df[df["simple_journal"] == 1]))
-    
+        df = pd.concat(
+            (
+                df[df["simple_journal"] == 0].sample(frac=0.1, random_state=1337),
+                df[df["simple_journal"] == 1],
+            )
+        )
+
     return df
-
-
-if __name__ == "__main__":
-    data = "./data/data_for_student_case.csv"
-    df = pd.read_csv(data)
-    preprocess(df)
