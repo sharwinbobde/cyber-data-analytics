@@ -11,8 +11,9 @@
 - Install from the requirements file: `pip install -r requirements.txt`
 
 3. If you are using the Conda package manager
-
-- TODO
+   1. Create a virtual environment: `conda create --name myenv`
+   2. Enter the environment: `conda activate --stack myenv` 
+   3. Install from the requirements file: `conda install --file requirements.txt`
 
 4. Run the jupyter server: `jupyter notebook .` and go to the url in your browser.
 
