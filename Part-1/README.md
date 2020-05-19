@@ -1,5 +1,10 @@
 # Lab 1 - Fraud Data
 
+**Submission by Group 15:**
+
+- Student ID: 4998707
+- Student ID: 5011639
+
 ## Instructions to Setup and Run
 
 1. Download the data from [brightspace](https://brightspace.tudelft.nl/d2l/le/content/196960/Home?itemIdentifier=D2L.LE.Content.ContentObject.ModuleCO-1658536) into the folder `data/`.
