@@ -114,23 +114,23 @@ class N_gram_Component:
         return np.array(disc_labels)
 
 
-    def generate_profiles(self, X, L:int):
+    def generate_profiles(self, X, L:int, skip=1):
         # iterate through X making windows of size L and find all signatures
         i = 0
         profiles = []
         while i+L < np.shape(X)[0]:
             sig = self.get_N_gram_signature(X[i:i+L, :])
             profiles.append(sig)   
-            i=i+L
+            i=i+skip
         return np.array(profiles)
     
-    def generate_profile_labels(self, Y, L:int):
+    def generate_profile_labels(self, Y, L:int, skip=1):
         # Y is all labels for discretised signal
         i = 0
         profile_labels = []
         while i+L < np.shape(Y)[0]:
             profile_labels.append(Y[i+L-1])   
-            i=i+L
+            i=i+skip
         profile_labels = np.array(profile_labels)
         profile_labels = profile_labels.reshape((profile_labels.shape[0], 1))
         return profile_labels

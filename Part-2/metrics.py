@@ -42,6 +42,8 @@ def run_metrics(Y_test, y_pred):
     result["recall"] = recall_score(Y_test, y_pred)
     result["f1"] = f1_score(Y_test, y_pred)
     result["auc"] = auc(fpr_model, tpr_model)
+    result["confusion"] = confusion_matrix(Y_test, y_pred)
+    result["confusion_norm"] = confusion_matrix(Y_test, y_pred, normalize='all')
 
     result["tn"] = tn(Y_test, y_pred)
     result["tp"] = tp(Y_test, y_pred)
