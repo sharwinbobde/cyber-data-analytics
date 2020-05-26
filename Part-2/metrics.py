@@ -35,6 +35,7 @@ def run_metrics(Y_test, y_pred):
     precision, recall, _ = precision_recall_curve(Y_test, y_pred)
     result["precision_curve"] = precision
     result["recall_curve"] = recall
+    result["auc_pr"] = auc(precision, precision)
 
     result["accuracy"] = accuracy_score(Y_test, y_pred)
     result["precision"] = precision_score(Y_test, y_pred)

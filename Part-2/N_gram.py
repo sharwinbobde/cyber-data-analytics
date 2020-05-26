@@ -136,7 +136,7 @@ class N_gram_Component:
         return profile_labels
 
     def fit_kNN(self, X, Y):
-        # Norm 2 Eucledean for k-NN the same as Cosine similarity ranking and classification
+        # Norm 2 Eucledean for k-NN the same as Cosine similarity neighbour ranking and classification
         # k arbitrarily picked because assignment goal is NOT to optimise k-NN
         self.knn = KNeighborsClassifier(n_neighbors=3, weights='uniform', metric='euclidean', algorithm='ball_tree', n_jobs=-1) 
         self.knn.fit(X,Y)

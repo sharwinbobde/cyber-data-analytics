@@ -45,3 +45,11 @@ class PCA_Component:
         min_ = np.min([np.min(R), self.min_R])
         scores = (R - min_)/(max_ - min_)
         return scores
+
+    def classify(self, X):
+        threshold = 0.03
+
+        scores = self.anomaly_score(X)
+        bins = [0.0,threshold]
+        pred = np.digitize(scores, bins) -1
+        return pred
