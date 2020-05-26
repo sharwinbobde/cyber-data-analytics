@@ -26,10 +26,9 @@ def tp(y_true, y_pred):
     return confusion_matrix(y_true, y_pred)[1, 1]
 
 
-def run_metrics(Y_test, y_pred, y_proba):
+def run_metrics(Y_test, y_pred):
     result = {}
-    y_score = y_proba[:, 1]
-    fpr_model, tpr_model, _ = roc_curve(Y_test, y_score)
+    fpr_model, tpr_model, _ = roc_curve(Y_test, y_pred)
     result["false_pos_rate"] = fpr_model
     result["true_pos_rate"] = tpr_model
 
