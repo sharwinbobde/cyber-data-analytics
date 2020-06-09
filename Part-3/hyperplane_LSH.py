@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC # "Support vector classifier"
+from collections import defaultdict
 
 class hyperplane_LSH:
 
@@ -52,6 +53,16 @@ class hyperplane_LSH:
         self.max_ = np.max(self.X, axis=0)
         self.min_ = np.min(self.X, axis=0)
 
+    def hash(self):
+        ''' hash self.X into buckets '''
+        output = []
+        for x in self.X:
+            row = []
+            for h in self.H:
+                row.append(h.predict([x])[0])
+            output.append(row)
+        return np.array(output)
+
 
 
 
@@ -81,6 +92,22 @@ def plot_svc_decision_function(model, ax=None, plot_support=True):
                    s=300, linewidth=1, facecolors='none');
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
+
+
+def generate_signature(n_gram_subset, unique_ngrams):
+    '''
+    param n_gram_subset: ngrams belongign to the same group (IP pair)
+    param unique_ngrams: known unique ngrams
+    '''
+    dict_ = defaultdict(int)
+    for gram in n_gram_subset:
+        dict_[str(gram)] += 1
+
+    signature = []
+    for gram in unique_ngrams:
+        signature.append(dict_[str(tuple(gram))] )
+
+    return np.array(signature)
 
 
 
