@@ -34,7 +34,7 @@ def profile_scenario(filename):
         increment = 50
         while i + L < items.shape[0]:
             # make ngrams
-            temp_grams = list(ngrams(items[i: i+L], 3))
+            temp_grams = list(ngrams(items[i: i+L], 2))
             i += increment # increment counter.. not used afterwords
             if np.shape(temp_grams)[0] == 0: # has < 3 entries, 0 3-grams
                 continue
