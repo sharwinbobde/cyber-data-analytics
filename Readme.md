@@ -22,3 +22,10 @@
   \- ip_id: Ip address
   \- card_id: Card number
 
+
+## Directorty structure
+For everything to work please ensure the dollowing directory structure
+
+```
+
+```
