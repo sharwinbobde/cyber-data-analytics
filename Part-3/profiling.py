@@ -12,13 +12,14 @@ from sklearn.metrics.pairwise import cosine_distances
 
 def profile_scenario(filename):
     df = pd.read_csv(filename)
+    n = 2
 
     groupby_cols = ['SrcAddr' ] 
     groupby_cols = df[groupby_cols].to_numpy()
     groupby_cols_unique = np.unique(groupby_cols, axis=0)
 
     # know all possible signatures
-    unique_ngrams = np.unique(np.array(list(ngrams(df['TotBytes_Dur'].to_numpy(), 3))), axis=0)
+    unique_ngrams = np.unique(np.array(list(ngrams(df['TotBytes_Dur'].to_numpy(), n))), axis=0)
 
     ip_ngrams = defaultdict(list)
 
@@ -29,14 +30,14 @@ def profile_scenario(filename):
         items = df['TotBytes_Dur'].to_numpy()[indexes]
 
         # do sliding window
-        L = 100 # window length
+        L = 50 # window length
         i = 0
-        increment = 50
+        increment = 25
         while i + L < items.shape[0]:
             # make ngrams
-            temp_grams = list(ngrams(items[i: i+L], 2))
+            temp_grams = list(ngrams(items[i: i+L], n))
             i += increment # increment counter.. not used afterwords
-            if np.shape(temp_grams)[0] == 0: # has < 3 entries, 0 3-grams
+            if np.shape(temp_grams)[0] == 0: # has < n entries
                 continue
             # make ngram frequency profile
             signature = generate_signature(temp_grams, unique_ngrams)
