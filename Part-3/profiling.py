@@ -10,7 +10,7 @@ from tqdm import tqdm
 from sklearn.metrics.pairwise import cosine_distances
 
 
-def profile_scenario(filename):
+def profile_scenario(filename, L=50, increment=25):
     df = pd.read_csv(filename)
     n = 2
 
@@ -30,9 +30,9 @@ def profile_scenario(filename):
         items = df['TotBytes_Dur'].to_numpy()[indexes]
 
         # do sliding window
-        L = 50 # window length
+        # L = 100 # window length
         i = 0
-        increment = 25
+        # increment = 50
         while i + L < items.shape[0]:
             # make ngrams
             temp_grams = list(ngrams(items[i: i+L], n))

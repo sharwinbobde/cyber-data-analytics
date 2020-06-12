@@ -82,8 +82,8 @@ def plot_svc_decision_function(model, ax=None, plot_support=True):
     
     # plot decision boundary and margins
     ax.contour(X, Y, P, colors='r',
-               levels=[-1, 0, 1], alpha=0.5,
-               linestyles=['--', '-', '--'])
+               levels=[0], alpha=0.5,
+               linestyles=['-'])
     
     # plot support vectors
     if plot_support:
