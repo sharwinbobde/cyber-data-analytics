@@ -25,20 +25,31 @@ After running the model for about 1000 steps of an epoch, we analyse the saved s
 
 First, we want to see a distribution of API calls over the samples. For this, we count the 1s for each feature index for both malicious and benign and display the frequencies of top 30 features indices with highest counts in malicious samples. This is shown below:
 
-![benign_malicous_counts](cda_lab4_images/benign_malicous_counts.png)
+![benign_malicous_counts](images/benign_malicous_counts.png)
 
 We can see that though there is similarity in counts initially for some features, many features have dissimilarity in counts. These are probably the API calls which are important in differentiating benign and malicious.
 
 Next, we would like to visualize which API calls that are present in benign are not present in malicious and vice versa. To do this, we sample again the features with most counts in malicious. We then permute these to create random pairs between benign and malicious. We subtract each of these pairs and visualize the results in a heat map shown below:
 
-![benign_malicous_change](cda_lab4_images/benign_malicous_change.png)
+![benign_malicous_change](images/benign_malicous_change.png)
 
 We can see each row as the difference between a random pair of benign and malicious samples. Each column is the feature differences. Red depicts that the feature stayed same (1 -> 1 or 0 -> 0), black means 0 -> 1 and white 1 -> 0. Hence, this visual shows that for a majority of the samples, they differ in first ~2600 features (black and white) and rest remain same (red). Hence, the first 2000 odd features are most important to distinguish between malicious and benign
 
-#### 1.1.2. Malicious vs. Adversarial
+#### 1.1.2 Adversarial
+
+![img](/home/sharwinbobde/Studies/Q4/CyberDA/cyber-data-analytics/Part-4/images/adversarial_dfgsm.png)
+
+Lets order the data by the decreasing frequency of malicious data, because this makes the data charactristically malicious.
+
+We see in the above frequency histogram of the adversarial data (blue) increases the 1s where the frequency for the benign data is higher. This means it ties to adapt to the form of the benign data to remain.
 
 
-#### 1.1.3. Benign vs. Adversarial
+
+![adversarial_bitflip_after_1_epoch_first1000](/home/sharwinbobde/Studies/Q4/CyberDA/cyber-data-analytics/Part-4/images/adversarial_bitflip_after_1_epoch_first1000.png)
+
+
+
+![adversarial_bitflip_after_1_epoch_low_benign_freq](/home/sharwinbobde/Studies/Q4/CyberDA/cyber-data-analytics/Part-4/images/adversarial_bitflip_after_1_epoch_low_benign_freq.png)
 
 ### 1.2 Compare malicious and adversarial samples after defense training
 
